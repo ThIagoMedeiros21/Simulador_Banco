@@ -18,7 +18,7 @@ void criar_Conta()
     if (file == NULL)
     {
         fclose(file);
-        printf("Ainda não existe clientes Registados, digite 1 novamente para registrar");
+        printf("Ainda não existe clientes Registados, digite 1 novamente para registrar\n");
         file=fopen("Contas.txt","a");
     }
     else
