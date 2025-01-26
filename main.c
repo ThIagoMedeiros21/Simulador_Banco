@@ -19,7 +19,7 @@ void criar_Conta()
     {
         fclose(file);
         printf("Ainda não existe clientes Registados, digite 1 novamente para registrar\n");
-        file=fopen("Contas.txt","a");
+        file = fopen("Contas.txt", "a");
     }
     else
     {
@@ -48,24 +48,87 @@ void criar_Conta()
         {
             printf("Digite o CPF novamente ");
             scanf("%d", &dados.cpf);
-            //Preciso adicionar uma verificação para que seja evitado criação de contas com mesmo cpf
-            printf("Digite seu nome: ");
-            scanf(" %[^\n]", dados.nome); 
-            printf("Para criar uma conta corrente digite 'c' ou para uma poupança digite 'p' ");
-            scanf(" %c", &dados.conta);
-            if (dados.conta == 'c')
+            if (dados.cpf == procurado)
             {
-                dados.saldo = 100.00;
+                printf("Digite seu nome: ");
+                scanf(" %[^\n]", dados.nome);
+                printf("Para criar uma conta corrente digite 'c' ou para uma poupança digite 'p' ");
+                scanf(" %c", &dados.conta);
+                if (dados.conta == 'c')
+                {
+                    dados.saldo = 100.00;
+                    fprintf(file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fclose(file);
+                }
+                else if (dados.conta == 'p')
+                {
+                    dados.saldo = 50.00;
+                    fprintf(file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fclose(file);
+                }
+                else
+                {
+                    fclose(file);
+                }
             }
-            else if (dados.conta == 'p')
+            else
             {
-                dados.saldo = 50.00;
+                printf("Digite o cpf digitado antes\n");
+                fclose(file);
+                return;
             }
-            fprintf(file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
-
-            fclose(file);
         }
     }
+}
+
+void apagar_Conta()
+{
+    FILE *file, *temp_file;
+    Dados dados;
+    file = fopen("Contas.txt", "r");
+    if (file == NULL)
+    {
+        printf("Não Existe registro de contas\n");
+        return;
+    }
+    else
+    {
+        temp_file=fopen("Tempo.txt","w");
+        if(temp_file==NULL){
+            printf("Erro ao criar o arquivo temporario\n");
+            fclose(file);
+            return;
+        }
+        int procurado;
+        printf("Digite o CPF que voce deseja procurar: ");
+        scanf("%d", &procurado);
+        while (fscanf(file, "%d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        {
+            if (procurado == dados.cpf)
+            {
+                if (dados.saldo != 0.00)
+                {
+                    printf("CPF encontrado mas não pode ser apagado\n");
+                    fprintf(temp_file, "%d %s %c %f", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                }
+                else
+                {
+                    printf("Conta com o CPF: %d apagada com sucesso\n", dados.cpf);
+                }
+            }
+            else
+            {
+                fprintf(temp_file, "%d %s %c %.2f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+            }
+        }
+        if(procurado!=dados.cpf){
+            printf("CPF não Encontrado\n");
+        }
+    fclose(file);
+    fclose(temp_file);
+    remove("Contas.txt");
+    rename("Tempo.txt","Contas.txt");
+}
 }
 
 int main()
@@ -81,7 +144,7 @@ int main()
         }
         else if (option == 2)
         {
-            printf("...\n");
+            apagar_Conta();
         }
         else if (option == 3)
         {
