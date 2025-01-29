@@ -123,12 +123,73 @@ void apagar_Conta()
         }
         if(procurado!=dados.cpf){
             printf("CPF não Encontrado\n");
+            remove("Tempo.txt");
         }
     fclose(file);
     fclose(temp_file);
     remove("Contas.txt");
     rename("Tempo.txt","Contas.txt");
 }
+}
+
+void saque(){
+    FILE *file, *temp_file;
+    Dados dados;
+    file=fopen("Contas.txt","r");
+    if(file==NULL){
+        printf("Arquivo não Criado\n");
+        return;
+    }
+    else{
+        int procurado;
+        float saque;
+        int verificado=0;
+        temp_file=fopen("Tempo.txt","w");
+        if(temp_file==NULL){
+            printf("Erro na criação");
+        }
+        printf("Digite seu CPF ");
+        scanf("%d",&procurado);
+        printf("Digite o valor que deseja sacar ");
+        scanf("%f",&saque);
+        if(saque<0){
+            fclose(temp_file);
+            fclose(file);
+            return;
+        }
+        while(fscanf(file,"%d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
+        if(procurado==dados.cpf){
+            verificado=1;
+            if(dados.saldo==0){
+               printf("Não existe saldo para ser resgatado nessa conta\n"); 
+            }
+            else{
+                float resultado;
+                resultado=dados.saldo-saque;
+                if(saque>dados.saldo){
+                    printf("Erro na transação");
+                
+                }
+                else{
+                    fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, resultado);
+                               
+                } 
+        }  
+        }else{
+            fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+        }
+       
+        }
+     if(!verificado){
+            printf("CPF não encontrado\n");
+            remove("Tempo.txt");
+        }    
+    fclose(file);
+    fclose(temp_file);
+    remove("Contas.txt");
+    rename("Tempo.txt","Contas.txt");
+    }
+    return; 
 }
 
 int main()
@@ -148,7 +209,7 @@ int main()
         }
         else if (option == 3)
         {
-            printf("...\n");
+            saque();
         }
         else if (option == 4)
         {
