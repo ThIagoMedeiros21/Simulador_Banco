@@ -130,6 +130,7 @@ void apagar_Conta()
     remove("Contas.txt");
     rename("Tempo.txt","Contas.txt");
 }
+    return;
 }
 
 void saque(){
@@ -162,6 +163,7 @@ void saque(){
             verificado=1;
             if(dados.saldo==0){
                printf("Não existe saldo para ser resgatado nessa conta\n"); 
+               fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
             }
             else{
                 float resultado;
@@ -190,7 +192,62 @@ void saque(){
     rename("Tempo.txt","Contas.txt");
     }
     return; 
+    //modificação em breve na função de saque para que só aconteça caso  exista o CPF informado pelo usuario
 }
+
+void deposito(){
+    FILE *file, *temp_file;
+    Dados dados;
+    file=fopen("Contas.txt","r");
+    if(file==NULL){
+        printf("Não existe dado de nenhuma conta\n");
+        return;
+    }
+    else{
+        temp_file=fopen("Tempo.txt","w");
+        if(temp_file==NULL){
+            printf("Erro ao Criar o Arquivo");
+            return;
+        }
+        else{
+        int Procurado,verificado=0;
+        float deposito,saldo_final;
+        printf("Digite o CPF que deseja depositar ");
+        scanf("%d",&Procurado);
+        while(fscanf(file,"%d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
+            if(Procurado==dados.cpf){
+                verificado=1;
+                printf("Digite o valor que deseja depositar ");
+                scanf("%f",&deposito);
+                if(deposito<0){
+                    printf("Erro no deposito\n");
+                    fclose(temp_file);
+                    fclose(file);
+                    return;
+                }
+                saldo_final=dados.saldo+deposito;
+                fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo_final);
+            }
+            else{
+                fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,dados.saldo);
+            }
+        }
+        if(!verificado){
+            printf("CPF não encontrado\n");
+            remove("Tempo.txt");
+        }
+        }
+    fclose(file);
+    fclose(temp_file);
+    remove("Contas.txt");
+    rename("Tempo.txt","Contas.txt");
+            
+    
+    
+}
+    return;
+}
+
 
 int main()
 {
@@ -213,7 +270,7 @@ int main()
         }
         else if (option == 4)
         {
-            printf("...\n");
+            deposito();
         }
         else if (option == 5)
         {
