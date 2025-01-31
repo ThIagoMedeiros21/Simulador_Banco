@@ -115,7 +115,7 @@ void apagar_Conta()
                 }
                 else
                 {
-                    printf("Conta com o CPF: %d apagada com sucesso\n", dados.cpf);
+                    printf("Conta apagada com sucesso\n");
                 }
             }
             else
@@ -172,7 +172,7 @@ void saque(){
                 resultado=dados.saldo-saque;
                 if(saque>dados.saldo){
                     printf("Erro na transação");
-                
+                    fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
                 else{
                     fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, resultado);
