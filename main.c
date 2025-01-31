@@ -93,6 +93,7 @@ void apagar_Conta()
     }
     else
     {
+        int verificado=0;
         temp_file=fopen("Tempo.txt","w");
         if(temp_file==NULL){
             printf("Erro ao criar o arquivo temporario\n");
@@ -106,10 +107,11 @@ void apagar_Conta()
         {
             if (procurado == dados.cpf)
             {
+                verificado=1;
                 if (dados.saldo != 0.00)
                 {
                     printf("CPF encontrado mas não pode ser apagado\n");
-                    fprintf(temp_file, "%d %s %c %f", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
                 else
                 {
@@ -118,10 +120,10 @@ void apagar_Conta()
             }
             else
             {
-                fprintf(temp_file, "%d %s %c %.2f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
             }
         }
-        if(procurado!=dados.cpf){
+        if(!verificado){
             printf("CPF não Encontrado\n");
             remove("Tempo.txt");
         }
