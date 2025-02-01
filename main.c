@@ -158,6 +158,7 @@ void saque(){
         if(saque<0){
             fclose(temp_file);
             fclose(file);
+            printf("Não se saca valor negativo");
             return;
         }
         while(fscanf(file,"%d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
@@ -171,7 +172,7 @@ void saque(){
                 float resultado;
                 resultado=dados.saldo-saque;
                 if(saque>dados.saldo){
-                    printf("Erro na transação");
+                    printf("Erro na transação\n");
                     fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
                 else{
@@ -208,7 +209,7 @@ void deposito(){
     else{
         temp_file=fopen("Tempo.txt","w");
         if(temp_file==NULL){
-            printf("Erro ao Criar o Arquivo");
+            printf("Erro ao Criar o Arquivo\n");
             return;
         }
         else{
@@ -250,6 +251,57 @@ void deposito(){
     return;
 }
 
+void Pagamento_taxa(){
+    FILE *file,*temp_file;
+    Dados dados;
+    file=fopen("Contas.txt","r");
+    if(file==NULL){
+        printf("Não há registros de CPF\n");
+        return;
+    }else{
+        temp_file=fopen("Tempo.txt","w");
+        if(temp_file==NULL){
+            printf("Arquivo não pode ser inicializado\n");
+        }
+        else{
+        int procurado,verificado=0;
+        float saldo,taxa;
+        printf("Digite o CPF que você deseja realizar o pagamento da taxa ");
+        scanf("%d",&procurado);
+        while(fscanf(file,"%d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
+            if(procurado==dados.cpf){
+                verificado=1;
+                if(dados.conta=='c'){
+                    taxa=25.0/100;
+                    saldo=dados.saldo-(dados.saldo*taxa);
+                    fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo);
+                    
+                }
+                else{
+                    taxa=15.0/100;
+                    saldo=dados.saldo-(dados.saldo*taxa);
+                    fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo);
+                    }
+            }
+            else{
+                    fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,dados.saldo);
+                    }
+            
+        }
+        if(!verificado){
+            printf("CPF não encontrado\n");
+            remove("Tempo.txt");
+        }
+        
+    }
+    fclose(file);
+    fclose(temp_file);
+    remove("Contas.txt");
+    rename("Tempo.txt","Contas.txt");
+
+    }
+    return;
+}
 
 int main()
 {
@@ -280,7 +332,7 @@ int main()
         }
         else if (option == 6)
         {
-            printf("...\n");
+            Pagamento_taxa();
         }
         else if (option == 7)
         {
