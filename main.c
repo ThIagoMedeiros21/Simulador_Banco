@@ -5,7 +5,7 @@
 typedef struct Dados
 {
     char nome[100];
-    int cpf;
+    long long int cpf;
     float saldo;
     char conta;
 } Dados;
@@ -23,11 +23,11 @@ void criar_Conta()
     }
     else
     {
-        int procurado;
+        long long int procurado;
         printf("Digite o CPF que deseja adicionar ");
-        scanf("%d", &procurado);
+        scanf("%I64d", &procurado);
 
-        while (fscanf(file, "%d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
         {
             if (procurado == dados.cpf)
             {
@@ -47,7 +47,7 @@ void criar_Conta()
         else
         {
             printf("Digite o CPF novamente ");
-            scanf("%d", &dados.cpf);
+            scanf("%I64d", &dados.cpf);
             if (dados.cpf == procurado)
             {
                 printf("Digite seu nome: ");
@@ -57,13 +57,13 @@ void criar_Conta()
                 if (dados.conta == 'c')
                 {
                     dados.saldo = 100.00;
-                    fprintf(file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                     fclose(file);
                 }
                 else if (dados.conta == 'p')
                 {
                     dados.saldo = 50.00;
-                    fprintf(file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                     fclose(file);
                 }
                 else
@@ -100,10 +100,10 @@ void apagar_Conta()
             fclose(file);
             return;
         }
-        int procurado;
+        long long int procurado;
         printf("Digite o CPF que voce deseja procurar: ");
-        scanf("%d", &procurado);
-        while (fscanf(file, "%d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        scanf("%I64d", &procurado);
+        while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
         {
             if (procurado == dados.cpf)
             {
@@ -111,7 +111,7 @@ void apagar_Conta()
                 if (dados.saldo != 0.00)
                 {
                     printf("CPF encontrado mas não pode ser apagado\n");
-                    fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
                 else
                 {
@@ -120,7 +120,7 @@ void apagar_Conta()
             }
             else
             {
-                fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
             }
         }
         if(!verificado){
@@ -144,7 +144,7 @@ void saque(){
         return;
     }
     else{
-        int procurado;
+        long long int procurado;
         float saque;
         int verificado=0;
         temp_file=fopen("Tempo.txt","w");
@@ -152,7 +152,7 @@ void saque(){
             printf("Erro na criação");
         }
         printf("Digite seu CPF ");
-        scanf("%d",&procurado);
+        scanf("%I64d",&procurado);
         printf("Digite o valor que deseja sacar ");
         scanf("%f",&saque);
         if(saque<0){
@@ -161,27 +161,27 @@ void saque(){
             printf("Não se saca valor negativo");
             return;
         }
-        while(fscanf(file,"%d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
+        while(fscanf(file,"%I64d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
         if(procurado==dados.cpf){
             verificado=1;
             if(dados.saldo==0){
                printf("Não existe saldo para ser resgatado nessa conta\n"); 
-               fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+               fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
             }
             else{
                 float resultado;
                 resultado=dados.saldo-saque;
                 if(saque>dados.saldo){
                     printf("Erro na transação\n");
-                    fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
                 else{
-                    fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, resultado);
+                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, resultado);
                                
                 } 
         }  
         }else{
-            fprintf(temp_file, "%d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+            fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
         }
        
         }
@@ -213,11 +213,12 @@ void deposito(){
             return;
         }
         else{
-        int Procurado,verificado=0;
+        long long int Procurado;
+        int verificado=0;
         float deposito,saldo_final;
         printf("Digite o CPF que deseja depositar ");
-        scanf("%d",&Procurado);
-        while(fscanf(file,"%d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
+        scanf("%I64d",&Procurado);
+        while(fscanf(file,"%I64d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
             if(Procurado==dados.cpf){
                 verificado=1;
                 printf("Digite o valor que deseja depositar ");
@@ -229,10 +230,10 @@ void deposito(){
                     return;
                 }
                 saldo_final=dados.saldo+deposito;
-                fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo_final);
+                fprintf(temp_file,"%I64d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo_final);
             }
             else{
-                fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,dados.saldo);
+                fprintf(temp_file,"%I64d %s %c %f\n",dados.cpf,dados.nome,dados.conta,dados.saldo);
             }
         }
         if(!verificado){
@@ -264,27 +265,28 @@ void Pagamento_taxa(){
             printf("Arquivo não pode ser inicializado\n");
         }
         else{
-        int procurado,verificado=0;
+        long long int procurado;
+        int verificado=0;
         float saldo,taxa;
         printf("Digite o CPF que você deseja realizar o pagamento da taxa ");
-        scanf("%d",&procurado);
-        while(fscanf(file,"%d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
+        scanf("%I64d",&procurado);
+        while(fscanf(file,"%I64d %s %c %f",&dados.cpf,dados.nome,&dados.conta,&dados.saldo)==4){
             if(procurado==dados.cpf){
                 verificado=1;
                 if(dados.conta=='c'){
                     taxa=25.0/100;
                     saldo=dados.saldo-(dados.saldo*taxa);
-                    fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo);
+                    fprintf(temp_file,"%I64d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo);
                     
                 }
                 else{
                     taxa=15.0/100;
                     saldo=dados.saldo-(dados.saldo*taxa);
-                    fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo);
+                    fprintf(temp_file,"%I64d %s %c %f\n",dados.cpf,dados.nome,dados.conta,saldo);
                     }
             }
             else{
-                    fprintf(temp_file,"%d %s %c %f\n",dados.cpf,dados.nome,dados.conta,dados.saldo);
+                    fprintf(temp_file,"%I64d %s %c %f\n",dados.cpf,dados.nome,dados.conta,dados.saldo);
                     }
             
         }
@@ -336,6 +338,7 @@ int main()
         }
         else if (option == 7)
         {
+            printf("Obrigado por utilizar o Banco Brasesco");
             break;
         }
     }
