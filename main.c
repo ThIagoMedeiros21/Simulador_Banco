@@ -17,17 +17,18 @@ void criar_Conta()
     file = fopen("Contas.txt", "r");
     if (file == NULL)
     {
-        fclose(file);
+        
         printf("Ainda não existe clientes Registados, digite 1 novamente para registrar\n");
         file = fopen("Contas.txt", "a");
+        fclose(file);
     }
     else
     {
         long long int procurado;
         printf("Digite o CPF que deseja adicionar ");
-        scanf("%I64d", &procurado);
+        scanf("%lld", &procurado);
 
-        while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
         {
             if (procurado == dados.cpf)
             {
@@ -47,7 +48,7 @@ void criar_Conta()
         else
         {
             printf("Digite o CPF novamente ");
-            scanf("%I64d", &dados.cpf);
+            scanf("%lld", &dados.cpf);
             if (dados.cpf == procurado)
             {
                 printf("Digite seu nome: ");
@@ -57,13 +58,13 @@ void criar_Conta()
                 if (dados.conta == 'c')
                 {
                     dados.saldo = 100.00;
-                    fprintf(file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                     fclose(file);
                 }
                 else if (dados.conta == 'p')
                 {
                     dados.saldo = 50.00;
-                    fprintf(file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                     fclose(file);
                 }
                 else
@@ -104,8 +105,8 @@ void apagar_Conta()
         }
         long long int procurado;
         printf("Digite o CPF que voce deseja procurar: ");
-        scanf("%I64d", &procurado);
-        while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        scanf("%lld", &procurado);
+        while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
         {
             if (procurado == dados.cpf)
             {
@@ -113,7 +114,7 @@ void apagar_Conta()
                 if (dados.saldo != 0.00)
                 {
                     printf("CPF encontrado mas não pode ser apagado\n");
-                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
                 else
                 {
@@ -122,13 +123,14 @@ void apagar_Conta()
             }
             else
             {
-                fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
             }
         }
         if (!verificado)
         {
             printf("CPF não Encontrado\n");
             remove("Tempo.txt");
+            return;
         }
         fclose(file);
         fclose(temp_file);
@@ -159,9 +161,9 @@ void saque()
             printf("Erro na criação");
         }
         printf("Digite seu CPF ");
-        scanf("%I64d", &procurado);
+        scanf("%lld", &procurado);
 
-        while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
         {
             if (procurado == dados.cpf)
             {
@@ -178,7 +180,7 @@ void saque()
                 if (dados.saldo == 0)
                 {
                     printf("Não existe saldo para ser resgatado nessa conta\n");
-                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
                 else
                 {
@@ -187,23 +189,24 @@ void saque()
                     if (saque > dados.saldo)
                     {
                         printf("Erro na transação\n");
-                        fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                        fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                     }
                     else
                     {
-                        fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, resultado);
+                        fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, resultado);
                     }
                 }
             }
             else
             {
-                fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
             }
         }
         if (!verificado)
         {
             printf("CPF não encontrado\n");
             remove("Tempo.txt");
+            return;
         }
         fclose(file);
         fclose(temp_file);
@@ -237,8 +240,8 @@ void deposito()
             int verificado = 0;
             float deposito, saldo_final;
             printf("Digite o CPF que deseja depositar ");
-            scanf("%I64d", &Procurado);
-            while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+            scanf("%lld", &Procurado);
+            while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
             {
                 if (Procurado == dados.cpf)
                 {
@@ -253,11 +256,11 @@ void deposito()
                         return;
                     }
                     saldo_final = dados.saldo + deposito;
-                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, saldo_final);
+                    fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, saldo_final);
                 }
                 else
                 {
-                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
             }
 
@@ -265,6 +268,7 @@ void deposito()
             {
                 printf("CPF não encontrado\n");
                 remove("Tempo.txt");
+                return;
             }
         }
         fclose(file);
@@ -298,8 +302,8 @@ void Pagamento_taxa()
             int verificado = 0;
             float saldo, taxa;
             printf("Digite o CPF que você deseja realizar o pagamento da taxa ");
-            scanf("%I64d", &procurado);
-            while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+            scanf("%lld", &procurado);
+            while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
             {
                 if (procurado == dados.cpf)
                 {
@@ -308,24 +312,25 @@ void Pagamento_taxa()
                     {
                         taxa = 25.0 / 100;
                         saldo = dados.saldo - (dados.saldo * taxa);
-                        fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, saldo);
+                        fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, saldo);
                     }
                     else
                     {
                         taxa = 15.0 / 100;
                         saldo = dados.saldo - (dados.saldo * taxa);
-                        fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, saldo);
+                        fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, saldo);
                     }
                 }
                 else
                 {
-                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
             }
             if (!verificado)
             {
                 printf("CPF não encontrado\n");
                 remove("Tempo.txt");
+                return;
             }
         }
         fclose(file);
@@ -354,8 +359,8 @@ void Transferencia()
         int CPF1_Encontrado = 0, CPF2_Encontrado = 0;
         float saldo1, saldo2, total;
         printf("Digite o seu CPF ");
-        scanf("%I64d", &CPF1);
-        while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        scanf("%lld", &CPF1);
+        while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
         {
             if (CPF1 == dados.cpf)
             {
@@ -372,13 +377,13 @@ void Transferencia()
         }
         file = fopen("Contas.txt", "r");
         printf("Digite o CPF do segundo usuario ");
-        scanf("%I64d", &CPF2);
+        scanf("%lld", &CPF2);
         if (CPF1 == CPF2)
         {
             printf("Não se pode fazer transferencia para o mesmo CPF\n");
             return;
         }
-        while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+        while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
         {
             if (CPF2 == dados.cpf)
             {
@@ -414,19 +419,19 @@ void Transferencia()
         }
         else
         {
-            while (fscanf(file, "%I64d %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
+            while (fscanf(file, "%lld %s %c %f", &dados.cpf, dados.nome, &dados.conta, &dados.saldo) == 4)
             {
                 if (dados.cpf == CPF1)
                 {
-                    fprintf(temp_file, "%I64d %s %c %f\n", CPF1, dados.nome, dados.conta, saldo1);
+                    fprintf(temp_file, "%lld %s %c %f\n", CPF1, dados.nome, dados.conta, saldo1);
                 }
                 else if (dados.cpf == CPF2)
                 {
-                    fprintf(temp_file, "%I64d %s %c %f\n", CPF2, dados.nome, dados.conta, saldo2);
+                    fprintf(temp_file, "%lld %s %c %f\n", CPF2, dados.nome, dados.conta, saldo2);
                 }
                 else
                 {
-                    fprintf(temp_file, "%I64d %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
+                    fprintf(temp_file, "%lld %s %c %f\n", dados.cpf, dados.nome, dados.conta, dados.saldo);
                 }
             }
         }
